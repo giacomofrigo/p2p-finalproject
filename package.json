@@ -1,0 +1,19 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "This repository contains a simple smart contract developed for finalterm exam of the peer to peer systems and blockchain exams @ UNIPI",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "lite-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@truffle/contract": "^4.3.20",
+    "lite-server": "^2.6.1",
+    "web3": "^1.3.6"
+  }
+}
