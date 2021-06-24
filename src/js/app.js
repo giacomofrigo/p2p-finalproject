@@ -44,7 +44,8 @@ App = {
 
             if(err == null) {
                 App.account = account;
-                $("#accountId").html("Your address: " + account);
+                console.log("address:" + account)
+                $("#user_address").text(account);
             }
         });
 
@@ -83,7 +84,6 @@ App = {
 
             const v = await instance.value(); // Solidity uint are Js BigNumbers 
             console.log(v.toNumber());
-            $("#valueId").html("" + v);
         });
     },
 
