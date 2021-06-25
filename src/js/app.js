@@ -83,7 +83,19 @@ App = {
         App.contracts["Contract"].deployed().then(async(instance) =>{
 
             const v = await instance.escrow(); // Solidity uint are Js BigNumbers 
-            console.log(v);
+            let voting_condition = await instance.voting_condition();
+            console.log(voting_condition);
+            let quorum = voting_condition.quorum.words[0];
+            let envelopes_casted = voting_condition.envelopes_casted.words[0];
+            let envelopes_casted_perc = Math.floor(envelopes_casted * 100 / quorum);
+            $("#quorum").text(quorum);
+            $("#progress_bar_opened_envelopes").css("width", envelopes_casted_perc);
+            
+            $("#progress_bar_opened_envelopes_text").text(envelopes_casted_perc + "%");
+            
+            $("#progress_bar_opened_envelopes").attr("aria-valuenow", envelopes_casted_perc);
+            console.log(envelopes_casted);
+            
         });
     },
 

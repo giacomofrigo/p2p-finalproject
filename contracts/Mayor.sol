@@ -70,7 +70,7 @@ contract Mayor {
     // Voting phase variables
     mapping(address => bytes32) envelopes;
 
-    Conditions voting_condition;
+    Conditions public voting_condition;
 
     // maps each candidate address to the amount of soul sent to him from voters
 

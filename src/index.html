@@ -49,18 +49,34 @@
         <h3 class="text-muted">Valadilène Election System<p class="lead" style="float: right;">version 1.0</p></h3>
       </div>
 
-      <div class="jumbotron text-center" style="background-color: rgb(255, 255, 255); line-height: 24px;">
+      <div class="jumbotron text-center" id="defaultView" style="background-color: rgb(255, 255, 255); line-height: 24px; margin-bottom: 0em;">
         <h1 class="display-4" style="text-align: center; line-height: 86px;">Valadilène Election System</h1>
         <p class="lead" style="text-align:center;">Your address:&nbsp<span id="user_address"></span></p>
-        <p><span class="btn btn-lg btn-outline-info" onclick="candidateSwal()">Candidate yourself!</span><span class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Cast an envelope!</span></p>
+        <p id="defaultView_buttons"><span class="btn btn-lg btn-outline-info" onclick="candidateSwal()">Candidate yourself!</span><span class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Cast an envelope!</span></p>
+        <p id="candidate_sentence">You're competing for Valadilène mayor position!</p>
       </div>
 
-      
-
-      
+      <div id="opened_envelopes" style="display: none;">
+        <div class="row justify-content-center">
+          <div class="col-lg-9">
+              <h4 class="text-muted"> Opened envelopes<p style="float: right;">Quorum: <span id="quorum"></span></p></h3>
+              
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-9">
+            <div class="progress" style="height: 25px;">
+              <div id="progress_bar_opened_envelopes" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                <small id = "progress_bar_opened_envelopes_text" class="justify-content-center d-flex position-absolute w-100" style="color:black; font-size: 1em;"></small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div> <!-- /container -->
 
+    <!-- footer -->
     <footer class="footer">
       <div class="container">
           <span class="text-muted">Source code available on Github</span>
@@ -82,6 +98,29 @@
 
 
     <script>
+      $(document).ready(() => {
+        let role = getCookie("role");
+        if (role != "")
+          update_page(role);
+      })
+
+
+      function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+
       function candidateSwal(){
         Swal.fire({
           title: 'Candidate yourself',
@@ -110,9 +149,24 @@
         }).then((result) => {
           if (result.isConfirmed){
             Swal.fire("Success!", "You're now fighting for the mayor election!", "success");
+            let expire = new Date();
+            //coockie will expire in 14 days
+            expire.setTime(new Date().getTime() + 3600000*24*14);
+
+            document.cookie = "role=candidate; expires="+expire.toGMTString()+"; Secure";
+            update_page("candidate")
           }
             
         })
+      }
+
+      function update_page(role){
+        if (role === "candidate"){
+          console.log("changing view to candidate view");
+          $('#defaultView_buttons').hide()
+          $('#candidate_sentence').show()
+          $('#opened_envelopes').show()
+        }
       }
     </script>
 </body>
