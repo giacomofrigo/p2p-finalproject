@@ -114,7 +114,21 @@ App = {
             })
         })
         
-    } 
+    },
+    castEnvelope: function() {
+
+        return new Promise((resolve, reject) => {
+            App.contracts["Contract"].deployed().then((instance) =>{
+                instance.compute_envelope($('#swal_castenvelope_sigil'), $('#swal_castenvelope_candidate_address'), $('#swal_castenvelope_souls'), {from: App.account}).then((receipt) =>  {
+                    resolve(receipt);
+                    console.log(receipt);
+                }).catch((error, receipt) => {
+                    reject(error.message);
+                });
+            })
+        })
+        
+    }
 }
 
 // Call init whenever the window loads

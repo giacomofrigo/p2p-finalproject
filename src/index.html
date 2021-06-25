@@ -52,7 +52,7 @@
       <div class="jumbotron text-center" id="defaultView" style="background-color: rgb(255, 255, 255); line-height: 24px; margin-bottom: 0em;">
         <h1 class="display-4" style="text-align: center; line-height: 86px;">Valadilène Election System</h1>
         <p class="lead" style="text-align:center;">Your address:&nbsp<span id="user_address"></span></p>
-        <p id="defaultView_buttons"><span class="btn btn-lg btn-outline-info" onclick="candidateSwal()">Candidate yourself!</span><span class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Cast an envelope!</span></p>
+        <p id="defaultView_buttons"><span class="btn btn-lg btn-outline-info" onclick="candidateSwal()">Candidate yourself!</span><span onclick ="castEnvelopeSwal()" class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Cast an envelope!</span></p>
         <p id="candidate_sentence">You're competing for Valadilène mayor position!</p>
       </div>
 
@@ -80,6 +80,7 @@
     <footer class="footer">
       <div class="container">
           <span class="text-muted">Source code available on Github</span>
+          <span class="btn btn-lg btn-outline-dark" onclick="document.cookie = 'role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'">Reset Coockie</span>
           <span class ="text-muted" style="float:right">developed by Giacomo Frigo (g.frigo@studenti.unipi.it) </span>
       </div>
     </footer>
@@ -168,6 +169,61 @@
           $('#opened_envelopes').show()
         }
       }
-    </script>
+
+      function castEnvelopeSwal(){
+        Swal.fire({
+          title: 'Cast an envelope',
+          confirmButtonText: `Submit`,
+          showCancelButton: true,
+          showLoaderOnConfirm: true,
+          preConfirm: () => {
+            return App.castEnvelope().catch((error) => {
+              Swal.fire({
+                title:"Something goes wrong!", 
+                text: "Please try again later.", 
+                icon: "error",
+                footer: error
+              });
+            });
+          },
+          html: 
+          "<div class='row'>" +
+          "<div class='col'>" +
+          "<div class='form-group'>" +
+          "<label>Candidate address</label>" +
+          "<input class='form-control' type='text' id='swal_castenvelope_candidate_address' placeholder='address'>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "<div class='row'>" +
+          "<div class='col'>" +
+          "<div class='form-group'>" +
+          "<label>Souls</label>" +
+          "<input class='form-control' type='text' id='swal_castenvelope_souls' placeholder='souls (eth)'>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "<div class='row'>" +
+          "<div class='col'>" +
+          "<div class='form-group'>" +
+          "<label>Sigil</label>" +
+          "<input class='form-control' type='text' id='swal_castenvelope_sigil' placeholder='sigil'>" +
+          "</div>" +
+          "</div>" +
+          "</div>" 
+        }).then((result) => {
+          if (result.isConfirmed){
+            Swal.fire("Success!", "Your envelope has been casted!", "success");
+            let expire = new Date();
+            //coockie will expire in 14 days
+            expire.setTime(new Date().getTime() + 3600000*24*14);
+
+            document.cookie = "role=voter; expires="+expire.toGMTString()+"; Secure";
+            update_page("voter")
+          }
+            
+        })
+      }
+</script>
 </body>
 </html>
