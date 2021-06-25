@@ -52,7 +52,7 @@
       <div class="jumbotron text-center" style="background-color: rgb(255, 255, 255); line-height: 24px;">
         <h1 class="display-4" style="text-align: center; line-height: 86px;">Valadilène Election System</h1>
         <p class="lead" style="text-align:center;">Your address:&nbsp<span id="user_address"></span></p>
-        <p><a class="btn btn-lg btn-outline-info" href="#" role="button">Candidate yourself!</a><a class="btn btn-lg ml-2 btn-outline-success" href="#" role="button" style="left: auto; float: none;">Cast an envelope!</a></p>
+        <p><span class="btn btn-lg btn-outline-info" onclick="candidateSwal()">Candidate yourself!</span><span class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Cast an envelope!</span></p>
       </div>
 
       
@@ -71,11 +71,49 @@
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!--  Swal -->
+    <script src="js/sweetalert2.all.min.js"></script>
 
     <!-- Web3 -->
     <script src="./dist/web3.min.js"></script>
     <script src="./dist/truffle-contract.js"></script>
     <!-- App -->
     <script src="./js/app.js"></script>
+
+
+    <script>
+      function candidateSwal(){
+        Swal.fire({
+          title: 'Candidate yourself',
+          confirmButtonText: `Submit`,
+          showCancelButton: true,
+          showLoaderOnConfirm: true,
+          preConfirm: () => {
+            return App.candidate().catch((error) => {
+              Swal.fire({
+                title:"Something goes wrong!", 
+                text: "Please try again later.", 
+                icon: "error",
+                footer: error
+              });
+            });
+          },
+          html: 
+          "<div class='row'>" +
+          "<div class='col'>" +
+          "<div class='form-group'>" +
+          "<label>Insert your deposit</label>" +
+          "<input class='form-control' type='text' id='swal_candidate_deposit' placeholder='souls (eth)'>" +
+          "</div>" +
+          "</div>" +
+          "</div>" 
+        }).then((result) => {
+          if (result.isConfirmed){
+            Swal.fire("Success!", "You're now fighting for the mayor election!", "success");
+          }
+            
+        })
+      }
+    </script>
 </body>
 </html>

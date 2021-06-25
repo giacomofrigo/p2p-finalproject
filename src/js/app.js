@@ -50,7 +50,7 @@ App = {
         });
 
         // Load content's abstractions
-        $.getJSON("MyContract.json").done(function(c) {
+        $.getJSON("Mayor.json").done(function(c) {
             App.contracts["Contract"] = TruffleContract(c);
             App.contracts["Contract"].setProvider(App.web3Provider);
 
@@ -65,12 +65,12 @@ App = {
 
             // web3.eth.getBlockNumber(function (error, block) {
                 // click is the Solidity event
-                instance.click().on('data', function (event) {
-                    $("#eventId").html("Event catched!");
-                    console.log("Event catched");
-                    console.log(event);
+                //instance.click().on('data', function (event) {
+                //    $("#eventId").html("Event catched!");
+                //    console.log("Event catched");
+                //    console.log(event);
                     // If event has parameters: event.returnValues.valueName
-                });
+                //});
             // });
         });
 
@@ -82,19 +82,26 @@ App = {
 
         App.contracts["Contract"].deployed().then(async(instance) =>{
 
-            const v = await instance.value(); // Solidity uint are Js BigNumbers 
-            console.log(v.toNumber());
+            const v = await instance.escrow(); // Solidity uint are Js BigNumbers 
+            console.log(v);
         });
     },
 
     // Call a function from a smart contract
         // The function send an event that triggers a transaction:: Metamask opens to confirm the transaction by the user
-    pressClick: function() {
+    candidate: function() {
 
-        App.contracts["Contract"].deployed().then(async(instance) =>{
-
-            await instance.pressClick({from: App.account});
-        });
+        return new Promise((resolve, reject) => {
+            App.contracts["Contract"].deployed().then((instance) =>{
+                instance.new_candidate({from: App.account, value: parseInt($('#swal_candidate_deposit').val()) * 1000000000000000000}).then((receipt) =>  {
+                    resolve(receipt);
+                    console.log(receipt);
+                }).catch((error, receipt) => {
+                    reject(error.message);
+                });
+            })
+        })
+        
     } 
 }
 
