@@ -53,7 +53,8 @@
         <h1 class="display-4" style="text-align: center; line-height: 86px;">Valadilène Election System</h1>
         <p class="lead" style="text-align:center;">Your address:&nbsp<span id="user_address"></span></p>
         <p id="defaultView_buttons"><span class="btn btn-lg btn-outline-info" onclick="candidateSwal()">Candidate yourself!</span><span onclick ="castEnvelopeSwal()" class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Cast an envelope!</span></p>
-        <p id="candidate_sentence">You're competing for Valadilène mayor position!</p>
+        <p id="casted_buttons" style="display:none;"><span class="btn btn-lg btn-outline-info" onclick="castEnvelopeSwal()">Re-cast an envelope!</span><span onclick ="openEnvelopeCast()" class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Open your envelope!</span></p>
+        <p id="candidate_sentence" style="display:none;">You're competing for Valadilène mayor position!</p>
       </div>
 
       <div id="opened_envelopes" style="display: none;">
@@ -80,7 +81,7 @@
     <footer class="footer">
       <div class="container">
           <span class="text-muted">Source code available on Github</span>
-          <span class="btn btn-lg btn-outline-dark" onclick="document.cookie = 'role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'">Reset Coockie</span>
+          <span class="btn btn-lg btn-outline-dark" onclick="document.cookie = 'status=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'">Reset Coockie</span>
           <span class ="text-muted" style="float:right">developed by Giacomo Frigo (g.frigo@studenti.unipi.it) </span>
       </div>
     </footer>
@@ -100,9 +101,9 @@
 
     <script>
       $(document).ready(() => {
-        let role = getCookie("role");
-        if (role != "")
-          update_page(role);
+        let status = getCookie("status");
+        if (status != "")
+          update_page(status);
       })
 
 
@@ -154,20 +155,35 @@
             //coockie will expire in 14 days
             expire.setTime(new Date().getTime() + 3600000*24*14);
 
-            document.cookie = "role=candidate; expires="+expire.toGMTString()+"; Secure";
+            document.cookie = "status=candidate; expires="+expire.toGMTString()+"; Secure";
             update_page("candidate")
           }
             
         })
       }
 
-      function update_page(role){
-        if (role === "candidate"){
+      function update_page(status){
+        if (status === "candidate"){
           console.log("changing view to candidate view");
           $('#defaultView_buttons').hide()
           $('#candidate_sentence').show()
           $('#opened_envelopes').show()
+          return;
         }
+
+        if (status === "casted"){
+          console.log("changing view to casted view");
+          $('#defaultView_buttons').hide()
+          $('#casted_buttons').show()
+          $('#opened_envelopes').show()
+          return;
+        }
+
+        $('#defaultView_buttons').show()
+        $('#casted_buttons').hide()
+        $('#opened_envelopes').hide()
+        $('#candidate_sentence').hide()
+        
       }
 
       function castEnvelopeSwal(){
@@ -218,8 +234,8 @@
             //coockie will expire in 14 days
             expire.setTime(new Date().getTime() + 3600000*24*14);
 
-            document.cookie = "role=voter; expires="+expire.toGMTString()+"; Secure";
-            update_page("voter")
+            document.cookie = "status=voter; expires="+expire.toGMTString()+"; Secure";
+            update_page("casted")
           }
             
         })

@@ -86,15 +86,15 @@ App = {
             let voting_condition = await instance.voting_condition();
             console.log(voting_condition);
             let quorum = voting_condition.quorum.words[0];
-            let envelopes_casted = voting_condition.envelopes_casted.words[0];
-            let envelopes_casted_perc = Math.floor(envelopes_casted * 100 / quorum);
+            let envelopes_opened = voting_condition.envelopes_opened.words[0];
+            let envelopes_opened_perc = Math.floor(envelopes_opened * 100 / quorum);
             $("#quorum").text(quorum);
-            $("#progress_bar_opened_envelopes").css("width", envelopes_casted_perc);
+            $("#progress_bar_opened_envelopes").css("width", envelopes_opened_perc);
             
-            $("#progress_bar_opened_envelopes_text").text(envelopes_casted_perc + "%");
+            $("#progress_bar_opened_envelopes_text").text(envelopes_opened_perc + "%");
             
-            $("#progress_bar_opened_envelopes").attr("aria-valuenow", envelopes_casted_perc);
-            console.log(envelopes_casted);
+            $("#progress_bar_opened_envelopes").attr("aria-valuenow", envelopes_opened_perc);
+            console.log(envelopes_opened);
             
         });
     },
@@ -118,13 +118,26 @@ App = {
     castEnvelope: function() {
 
         return new Promise((resolve, reject) => {
+            let envelope = null;
+
+            //call the compute envelope funtion
             App.contracts["Contract"].deployed().then((instance) =>{
-                instance.compute_envelope($('#swal_castenvelope_sigil'), $('#swal_castenvelope_candidate_address'), $('#swal_castenvelope_souls'), {from: App.account}).then((receipt) =>  {
-                    resolve(receipt);
-                    console.log(receipt);
+                instance.compute_envelope($('#swal_castenvelope_sigil').val(), $('#swal_castenvelope_candidate_address').val(), $('#swal_castenvelope_souls').val(), {from: App.account}).then((receipt) =>  {
+                    envelope = receipt;
+                    //call the cast envelope function
+                    instance.cast_envelope(envelope, {from: App.account}).then((receipt) =>  {
+                        resolve(receipt)
+                    }).catch((error, receipt) => {
+                        reject(error.message);
+                    });
+                })
+
                 }).catch((error, receipt) => {
                     reject(error.message);
                 });
+
+                App.contracts["Contract"].deployed().then((instance) =>{
+                
             })
         })
         
