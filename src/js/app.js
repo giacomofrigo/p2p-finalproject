@@ -87,7 +87,13 @@ App = {
             console.log(voting_condition);
             let quorum = voting_condition.quorum.words[0];
             let envelopes_opened = voting_condition.envelopes_opened.words[0];
+            let envelopes_casted = voting_condition.envelopes_casted.words[0];
             let envelopes_opened_perc = Math.floor(envelopes_opened * 100 / quorum);
+
+            if (envelopes_casted < quorum){
+                $('#open_envelope_button').addClass("disabled")
+            }
+
             $("#quorum").text(quorum);
             $("#progress_bar_opened_envelopes").css("width", envelopes_opened_perc);
             
@@ -141,7 +147,21 @@ App = {
             })
         })
         
-    }
+    },
+    openEnvelope: function() {
+
+        return new Promise((resolve, reject) => {
+            App.contracts["Contract"].deployed().then((instance) =>{
+                instance.open_envelope($('#swal_openenvelope_sigil').val(), $('#swal_openenvelope_candidate').val(), {from: App.account, value: parseInt($('#swal_openenvelope_souls').val()) * 1000000000000000000}).then((receipt) =>  {
+                    resolve(receipt);
+                    console.log(receipt);
+                }).catch((error, receipt) => {
+                    reject(error.message);
+                });
+            })
+        })
+        
+    },
 }
 
 // Call init whenever the window loads

@@ -52,8 +52,8 @@
       <div class="jumbotron text-center" id="defaultView" style="background-color: rgb(255, 255, 255); line-height: 24px; margin-bottom: 0em;">
         <h1 class="display-4" style="text-align: center; line-height: 86px;">Valadilène Election System</h1>
         <p class="lead" style="text-align:center;">Your address:&nbsp<span id="user_address"></span></p>
-        <p id="defaultView_buttons"><span class="btn btn-lg btn-outline-info" onclick="candidateSwal()">Candidate yourself!</span><span onclick ="castEnvelopeSwal()" class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Cast an envelope!</span></p>
-        <p id="casted_buttons" style="display:none;"><span class="btn btn-lg btn-outline-info" onclick="castEnvelopeSwal()">Re-cast an envelope!</span><span onclick ="openEnvelopeCast()" class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Open your envelope!</span></p>
+        <p id="defaultView_buttons"><span class="btn btn-lg btn-outline-info" id="candidate_button" onclick="candidateSwal()">Candidate yourself!</span><span id="cast_envelope_button" onclick ="castEnvelopeSwal()" class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Cast an envelope!</span></p>
+        <p id="casted_buttons" style="display:none;"><span id="recast_envelope_button" class="btn btn-lg btn-outline-info" onclick="castEnvelopeSwal()">Re-cast an envelope!</span><span id="open_envelope_button" onclick ="openEnvelopeSwal()" class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Open your envelope!</span></p>
         <p id="candidate_sentence" style="display:none;">You're competing for Valadilène mayor position!</p>
       </div>
 
@@ -123,6 +123,15 @@
         return "";
       }
 
+      function setCookie(c_name,c_value,exdays) {
+        var exdate=new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        document.cookie=encodeURIComponent(c_name) 
+          + "=" + encodeURIComponent(c_value)
+          + (!exdays ? "" : "; expires="+exdate.toUTCString());
+          ;
+      }
+
       function candidateSwal(){
         Swal.fire({
           title: 'Candidate yourself',
@@ -151,11 +160,8 @@
         }).then((result) => {
           if (result.isConfirmed){
             Swal.fire("Success!", "You're now fighting for the mayor election!", "success");
-            let expire = new Date();
             //coockie will expire in 14 days
-            expire.setTime(new Date().getTime() + 3600000*24*14);
-
-            document.cookie = "status=candidate; expires="+expire.toGMTString()+"; Secure";
+            setCookie("status", "candidate", 14)
             update_page("candidate")
           }
             
@@ -240,6 +246,64 @@
             
         })
       }
+
+      function openEnvelopeSwal(){
+        Swal.fire({
+          title: 'Open your envelope',
+          confirmButtonText: `Submit`,
+          showCancelButton: true,
+          showLoaderOnConfirm: true,
+          preConfirm: () => {
+            return App.openEnvelope().catch((error) => {
+              Swal.fire({
+                title:"Something goes wrong!", 
+                text: "Please try again later.", 
+                icon: "error",
+                footer: error
+              });
+            });
+          },
+          html: 
+          "<div class='row'>" +
+          "<div class='col'>" +
+          "<div class='form-group'>" +
+          "<label>Candidate</label>" +
+          "<input class='form-control' type='text' id='swal_openenvelope_candidate' placeholder='address'>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "<div class='row'>" +
+          "<div class='col'>" +
+          "<div class='form-group'>" +
+          "<label>Souls</label>" +
+          "<input class='form-control' type='text' id='swal_openenvelope_souls' placeholder='souls (eth)'>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "<div class='row'>" +
+          "<div class='col'>" +
+          "<div class='form-group'>" +
+          "<label>Sigil</label>" +
+          "<input class='form-control' type='text' id='swal_openenvelope_sigil' placeholder='sigil'>" +
+          "</div>" +
+          "</div>" +
+          "</div>" 
+        }).then((result) => {
+          if (result.isConfirmed){
+            Swal.fire("Success!", "Your envelope has been opened!", "success");
+            let expire = new Date();
+            //coockie will expire in 14 days
+            expire.setTime(new Date().getTime() + 3600000*24*14);
+
+            document.cookie = "status=opened; expires="+expire.toGMTString()+"; Secure";
+            update_page("opened")
+          }
+            
+        })
+      }
+
+
+      
 </script>
 </body>
 </html>
