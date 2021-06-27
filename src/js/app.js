@@ -65,15 +65,22 @@ App = {
 
         App.contracts["Contract"].deployed().then(async (instance) => {
 
-            // web3.eth.getBlockNumber(function (error, block) {
+            web3.eth.getBlockNumber(function (error, block) {
                 // click is the Solidity event
-                //instance.click().on('data', function (event) {
+                instance.OpeningEnvelope().on('data', function (event) {
                 //    $("#eventId").html("Event catched!");
-                //    console.log("Event catched");
-                //    console.log(event);
+                    console.log("Event catched");
+                    console.log(event);
                     // If event has parameters: event.returnValues.valueName
-                //});
-            // });
+                });
+                
+                instance.OpeningEnvelopeStart().on('data', function (event) {
+                    //    $("#eventId").html("Event catched!");
+                        console.log("Event catched");
+                        console.log(event);
+                        // If event has parameters: event.returnValues.valueName
+                    });
+            });
         });
 
         return App.render();
@@ -98,7 +105,7 @@ App = {
             }
 
             $("#quorum").text(quorum);
-            $("#progress_bar_opened_envelopes").css("width", envelopes_opened_perc);
+            $("#progress_bar_opened_envelopes").css("width", envelopes_opened_perc + "%");
             
             $("#progress_bar_opened_envelopes_text").text(envelopes_opened_perc + "%");
             
@@ -131,8 +138,9 @@ App = {
 
             //call the compute envelope funtion
             App.contracts["Contract"].deployed().then((instance) =>{
-                instance.compute_envelope($('#swal_castenvelope_sigil').val(), $('#swal_castenvelope_candidate_address').val(), $('#swal_castenvelope_souls').val(), {from: App.account}).then((receipt) =>  {
+                instance.compute_envelope($('#swal_castenvelope_sigil').val(), $('#swal_castenvelope_candidate_address').val(),  $('#swal_castenvelope_souls').val(), {from: App.account}).then((receipt) =>  {
                     envelope = receipt;
+                    console.log(receipt)
                     //call the cast envelope function
                     instance.cast_envelope(envelope, {from: App.account}).then((receipt) =>  {
                         resolve(receipt)
@@ -155,7 +163,7 @@ App = {
 
         return new Promise((resolve, reject) => {
             App.contracts["Contract"].deployed().then((instance) =>{
-                instance.open_envelope($('#swal_openenvelope_sigil').val(), $('#swal_openenvelope_candidate').val(), {from: App.account, value: parseInt($('#swal_openenvelope_souls').val()) * 1000000000000000000}).then((receipt) =>  {
+                instance.open_envelope($('#swal_openenvelope_sigil').val(), $('#swal_openenvelope_candidate').val(), {from: App.account, value: $('#swal_openenvelope_souls').val()}).then((receipt) =>  {
                     resolve(receipt);
                     console.log(receipt);
                 }).catch((error, receipt) => {
@@ -163,6 +171,7 @@ App = {
                         reject(error.message.split("message")[1].split('"')[2]);
                     reject(error.message);
                 });
+                
             })
         })
         
