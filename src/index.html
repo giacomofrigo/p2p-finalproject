@@ -5,7 +5,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Narrow Jumbotron Template for Bootstrap</title>
+    <title>Valadilène Election System</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -73,6 +73,11 @@
         <p class="lead" style="text-align:center;"> is the new Valadilène mayor!</p>
       </div>
 
+      <!-- tie view -->
+      <div class="jumbotron text-center" id="tie_view" style="display:none;background-color: rgb(255, 173, 173); line-height: 24px; margin-bottom: 0em;">
+        <h1 class="display-6" id="winner_address" style="text-align: center; line-height: 86px;">No mayor was elected!</h1>
+      </div>
+
 
       <div id="opened_envelopes" style="display: none;">
         <div class="row justify-content-center">
@@ -97,8 +102,7 @@
     <!-- footer -->
     <footer class="footer">
       <div class="container">
-          <span class="text-muted">Source code available on Github</span>
-          <span class="btn btn-lg btn-outline-dark" onclick="document.cookie = App.account+'=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'">Reset Coockie</span>
+          <span class="text-muted">Source code available on <a href="https://github.com/giacomofrigo/p2p-finalproject" target="_blank">Github</a></span>
           <span class ="text-muted" style="float:right">developed by Giacomo Frigo (g.frigo@studenti.unipi.it) </span>
       </div>
     </footer>

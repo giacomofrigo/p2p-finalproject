@@ -94,14 +94,23 @@ App = {
 
             console.log("Casted envelopes: "+ envelopes_casted, ", Opened: "+ envelopes_opened, " Ended? " + voting_condition.ended)
             if (voting_condition.ended){
-                $('#defaultView').hide()
-                $('#casted_buttons').hide()
-                $('#opened_envelopes').hide()
-                $('#opened_sentence').hide()
-                $('#mayor_or_sayonara_view').hide()
-                $('#mayor_or_sayonara_view').hide()
-                $('#result_view').fadeIn()
-                $('#winner_address').text(await instance.winner())
+                let winner = await instance.winner()
+
+                if (winner == '0x0000000000000000000000000000000000000000'){
+                    $('#tie_view').fadeIn()
+                    $('#result_view').hide()
+                    
+                }else{
+                    $('#defaultView').hide()
+                    $('#casted_buttons').hide()
+                    $('#opened_envelopes').hide()
+                    $('#opened_sentence').hide()
+                    $('#mayor_or_sayonara_view').hide()
+                    $('#mayor_or_sayonara_view').hide()
+                    $('#result_view').fadeIn()
+                    $('#winner_address').text(winner)
+                }
+                
             }else{
 
                 if (envelopes_casted < quorum){

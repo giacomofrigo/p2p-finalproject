@@ -219,6 +219,7 @@ contract Mayor {
 
         // NO WINNER CASE
         if (tie){
+            winner = payable(0x0);
             uint all_souls = 0;
 
             for (uint i=0; i<n_candidates; i++){
