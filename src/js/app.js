@@ -159,6 +159,8 @@ App = {
                     resolve(receipt);
                     console.log(receipt);
                 }).catch((error, receipt) => {
+                    if (error.message.length > 500)
+                        reject(error.message.split("message")[1].split('"')[2]);
                     reject(error.message);
                 });
             })
