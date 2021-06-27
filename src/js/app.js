@@ -65,16 +65,15 @@ App = {
 
         App.contracts["Contract"].deployed().then(async (instance) => {
 
-            //web3.eth.getBlockNumber(function (error, block) {
-                // click is the Solidity event
-                //instance.OpeningEnvelope().on('data', function (event) {
-                //    $("#eventId").html("Event catched!");
-                    //console.log("Event catched");
-                    //console.log(event);
-                    // If event has parameters: event.returnValues.valueName
-                //});
+            web3.eth.getBlockNumber(function (error, block) {
+                // mayor is the Solidity event
+                instance.NewMayor().on('data', function (event) {
+                    console.log("Event catched");
+                    console.log((event));
+                    //$('#winner_address').text(events.args.candidate)
+                });
 
-            //});
+            });
         });
 
         return App.render();
@@ -102,6 +101,7 @@ App = {
                 $('#mayor_or_sayonara_view').hide()
                 $('#mayor_or_sayonara_view').hide()
                 $('#result_view').fadeIn()
+                $('#winner_address').text(await instance.winner())
             }else{
 
                 if (envelopes_casted < quorum){

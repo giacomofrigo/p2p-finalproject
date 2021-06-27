@@ -79,6 +79,8 @@ contract Mayor {
     mapping(address => Refund) souls;
     address payable[] voters;
 
+    address payable public winner;
+
     //***********************************************
     // the public keyword has been removed from the constructor
     // since it generates a warning message
@@ -180,7 +182,6 @@ contract Mayor {
         voting_condition.ended = true;
         
         uint max_souls = 0;
-        address payable winner;
         uint n_candidates = candidates.length;
         uint n_voters = voters.length;
         bool tie = false;
