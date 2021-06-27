@@ -38,7 +38,6 @@ App = {
 
     /* Upload the contract's abstractions */
     initContract: function() {
-        console.log("init")
         // Get current account
         web3.eth.getCoinbase(function(err, account) {
 
@@ -46,6 +45,9 @@ App = {
                 App.account = account;
                 console.log("address:" + account)
                 $("#user_address").text(account);
+
+                
+                
             }
         });
 
@@ -92,6 +94,7 @@ App = {
 
             if (envelopes_casted < quorum){
                 $('#open_envelope_button').addClass("disabled")
+                $("#open_envelope_button").css("pointer-events", "none");
             }
 
             $("#quorum").text(quorum);
