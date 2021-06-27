@@ -93,25 +93,44 @@ App = {
             let envelopes_casted = voting_condition.envelopes_casted.words[0];
             let envelopes_opened_perc = Math.floor(envelopes_opened * 100 / quorum);
 
-            if (envelopes_casted < quorum){
-                $('#open_envelope_button').addClass("disabled")
-                $("#open_envelope_button").css("pointer-events", "none");
+            console.log("Casted envelopes: "+ envelopes_casted, ", Opened: "+ envelopes_opened, " Ended? " + voting_condition.ended)
+            if (voting_condition.ended){
+                $('#defaultView').hide()
+                $('#casted_buttons').hide()
+                $('#opened_envelopes').hide()
+                $('#opened_sentence').hide()
+                $('#mayor_or_sayonara_view').hide()
+                $('#mayor_or_sayonara_view').hide()
+                $('#result_view').fadeIn()
             }else{
-                $('#cast_envelope_button').addClass("disabled")
-                $("#cast_envelope_button").css("pointer-events", "none");
-                $('#recast_envelope_button').addClass("disabled")
-                $("#recast_envelope_button").css("pointer-events", "none");
+
+                if (envelopes_casted < quorum){
+                    $('#open_envelope_button').addClass("disabled")
+                    $("#open_envelope_button").css("pointer-events", "none");
+                }else{
+                    $('#cast_envelope_button').addClass("disabled")
+                    $("#cast_envelope_button").css("pointer-events", "none");
+                    $('#recast_envelope_button').addClass("disabled")
+                    $("#recast_envelope_button").css("pointer-events", "none");
+                }
+    
+                if (envelopes_opened == quorum){
+                    $('#defaultView').hide()
+                    $('#casted_buttons').hide()
+                    $('#opened_envelopes').hide()
+                    $('#opened_sentence').hide()
+                    $('#mayor_or_sayonara_view').show()
+                    $('#mayor_or_sayonara_view').show()
+                }
+
             }
-
             
-
             $("#quorum").text(quorum);
             $("#progress_bar_opened_envelopes").css("width", envelopes_opened_perc + "%");
             
             $("#progress_bar_opened_envelopes_text").text(envelopes_opened_perc + "%");
             
             $("#progress_bar_opened_envelopes").attr("aria-valuenow", envelopes_opened_perc);
-            console.log(envelopes_opened);
             
         });
     },
@@ -166,7 +185,23 @@ App = {
             App.contracts["Contract"].deployed().then((instance) =>{
                 instance.open_envelope($('#swal_openenvelope_sigil').val(), $('#swal_openenvelope_candidate').val(), {from: App.account, value: web3.utils.toWei($('#swal_openenvelope_souls').val(), "ether")}).then((receipt) =>  {
                     resolve(receipt);
-                    console.log(receipt);
+                }).catch((error, receipt) => {
+                    if (error.message.length > 500)
+                        reject(error.message.split("message")[1].split('"')[2]);
+                    reject(error.message);
+                });
+                
+            })
+        })
+        
+    },
+
+    mayorOrSayonara: function() {
+
+        return new Promise((resolve, reject) => {
+            App.contracts["Contract"].deployed().then((instance) =>{
+                instance.mayor_or_sayonara({from: App.account}).then((receipt) =>  {
+                    resolve(receipt);
                 }).catch((error, receipt) => {
                     if (error.message.length > 500)
                         reject(error.message.split("message")[1].split('"')[2]);

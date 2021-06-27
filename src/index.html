@@ -70,7 +70,7 @@
       <!-- show result -->
       <div class="jumbotron text-center" id="result_view" style="display:none;background-color: rgb(186, 255, 169); line-height: 24px; margin-bottom: 0em;">
         <h1 class="display-4" id="winner_address" style="text-align: center; line-height: 86px;">0x24869612</h1>
-        <p class="lead" style="text-align:center;"> is the new Valadilène mayor</p>
+        <p class="lead" style="text-align:center;"> is the new Valadilène mayor!</p>
       </div>
 
 
@@ -223,6 +223,18 @@
           return;
         }
 
+        if (status === "result"){
+          console.log("changing view to result view");
+          $('#defaultView').hide()
+          $('#casted_buttons').hide()
+          $('#opened_envelopes').hide()
+          $('#opened_sentence').hide()
+          $('#mayor_or_sayonara_view').hide()
+          $('#mayor_or_sayonara_view').hide()
+          $('#result_view').fadeIn()
+          return;
+        }
+
         $('#defaultView_buttons').show()
         $('#casted_buttons').hide()
         $('#opened_envelopes').hide()
@@ -335,6 +347,32 @@
         })
       }
 
+      function mayorOrSayonara(){
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "This action will make election result available to all the voters",
+          icon: 'info',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes',
+          showLoaderOnConfirm: true,
+          preConfirm: () => {
+            return App.mayorOrSayonara().catch((error) => {
+              Swal.fire({
+                title:"Something goes wrong!", 
+                text: "Please try again later.", 
+                icon: "error",
+                footer: error
+              });
+            });
+          },
+         
+        }).then((result) => {
+          setCookie(App.account, "result", 14)
+          update_page("result")            
+        })
+      }
 
       
 </script>
