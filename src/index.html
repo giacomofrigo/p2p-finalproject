@@ -57,7 +57,22 @@
         
         <div class="form-group" id="casted_buttons" style="display:none;"><span id="recast_envelope_button" class="btn btn-lg btn-outline-info" onclick="castEnvelopeSwal()">Re-cast an envelope!</span><button id="open_envelope_button" onclick ="openEnvelopeSwal()" class="btn btn-lg ml-2 btn-outline-success" style="left: auto; float: none;">Open your envelope!</button></div>
         <p id="candidate_sentence" style="display:none;">You're competing for Valadilène mayor position!</p>
+        <p id="opened_sentence" style="display:none;">You opened your envelope. Vote counting procedure in progress..</p>
       </div>
+
+      <!-- mayor or sayonara -->
+      <div class="jumbotron text-center" id="mayor_or_sayonara_view" style="display:none;background-color: rgb(186, 255, 169); line-height: 24px; margin-bottom: 0em;">
+        <h1 class="display-4" style="text-align: center; line-height: 86px;">All the envelopes have been opened!</h1>
+        <p class="lead" style="text-align:center;"> Click to see who will be next Valadilène mayor!</p>
+        <p id="mayor_or_sayonara_view_buttons"><span class="btn btn-lg btn-outline-success" id="candidate_button" onclick="mayorOrSayonara()">Mayor or Sayonara!</span>
+      </div>
+
+      <!-- show result -->
+      <div class="jumbotron text-center" id="result_view" style="display:none;background-color: rgb(186, 255, 169); line-height: 24px; margin-bottom: 0em;">
+        <h1 class="display-4" id="winner_address" style="text-align: center; line-height: 86px;">0x24869612</h1>
+        <p class="lead" style="text-align:center;"> is the new Valadilène mayor</p>
+      </div>
+
 
       <div id="opened_envelopes" style="display: none;">
         <div class="row justify-content-center">
@@ -188,10 +203,33 @@
           return;
         }
 
+        if (status === "opened"){
+          console.log("changing view to opened view");
+          $('#defaultView_buttons').hide()
+          $('#casted_buttons').hide()
+          $('#opened_envelopes').show()
+          $('#opened_sentence').show()
+          return;
+        }
+
+        if (status === "mayor_or_sayonara"){
+          console.log("changing view to mayor or sayonare view");
+          $('#defaultView').hide()
+          $('#casted_buttons').hide()
+          $('#opened_envelopes').hide()
+          $('#opened_sentence').hide()
+          $('#mayor_or_sayonara_view').show()
+          $('#mayor_or_sayonara_view').show()
+          return;
+        }
+
         $('#defaultView_buttons').show()
         $('#casted_buttons').hide()
         $('#opened_envelopes').hide()
         $('#candidate_sentence').hide()
+        $('#opened_sentence').hide()
+        $('#mayor_or_sayonara_view').hide()
+        $('#mayor_or_sayonara_view').hide()
         
       }
 

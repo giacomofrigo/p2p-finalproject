@@ -65,22 +65,16 @@ App = {
 
         App.contracts["Contract"].deployed().then(async (instance) => {
 
-            web3.eth.getBlockNumber(function (error, block) {
+            //web3.eth.getBlockNumber(function (error, block) {
                 // click is the Solidity event
-                instance.OpeningEnvelope().on('data', function (event) {
+                //instance.OpeningEnvelope().on('data', function (event) {
                 //    $("#eventId").html("Event catched!");
-                    console.log("Event catched");
-                    console.log(event);
+                    //console.log("Event catched");
+                    //console.log(event);
                     // If event has parameters: event.returnValues.valueName
-                });
-                
-                instance.OpeningEnvelopeStart().on('data', function (event) {
-                    //    $("#eventId").html("Event catched!");
-                        console.log("Event catched");
-                        console.log(event);
-                        // If event has parameters: event.returnValues.valueName
-                    });
-            });
+                //});
+
+            //});
         });
 
         return App.render();
@@ -102,7 +96,14 @@ App = {
             if (envelopes_casted < quorum){
                 $('#open_envelope_button').addClass("disabled")
                 $("#open_envelope_button").css("pointer-events", "none");
+            }else{
+                $('#cast_envelope_button').addClass("disabled")
+                $("#cast_envelope_button").css("pointer-events", "none");
+                $('#recast_envelope_button').addClass("disabled")
+                $("#recast_envelope_button").css("pointer-events", "none");
             }
+
+            
 
             $("#quorum").text(quorum);
             $("#progress_bar_opened_envelopes").css("width", envelopes_opened_perc + "%");
@@ -138,7 +139,7 @@ App = {
 
             //call the compute envelope funtion
             App.contracts["Contract"].deployed().then((instance) =>{
-                instance.compute_envelope($('#swal_castenvelope_sigil').val(), $('#swal_castenvelope_candidate_address').val(),  $('#swal_castenvelope_souls').val(), {from: App.account}).then((receipt) =>  {
+                instance.compute_envelope($('#swal_castenvelope_sigil').val(), $('#swal_castenvelope_candidate_address').val(),  web3.utils.toWei($('#swal_castenvelope_souls').val(), "ether"), {from: App.account}).then((receipt) =>  {
                     envelope = receipt;
                     console.log(receipt)
                     //call the cast envelope function
@@ -163,7 +164,7 @@ App = {
 
         return new Promise((resolve, reject) => {
             App.contracts["Contract"].deployed().then((instance) =>{
-                instance.open_envelope($('#swal_openenvelope_sigil').val(), $('#swal_openenvelope_candidate').val(), {from: App.account, value: $('#swal_openenvelope_souls').val()}).then((receipt) =>  {
+                instance.open_envelope($('#swal_openenvelope_sigil').val(), $('#swal_openenvelope_candidate').val(), {from: App.account, value: web3.utils.toWei($('#swal_openenvelope_souls').val(), "ether")}).then((receipt) =>  {
                     resolve(receipt);
                     console.log(receipt);
                 }).catch((error, receipt) => {
