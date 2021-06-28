@@ -272,9 +272,9 @@ App = {
     
     },
 
-    fillDataTable: function(address, votes, souls){
+    fillDataTable: function(address, deposit, votes, souls){
         dataTable.row.add( [
-            address, votes, souls
+            address, deposit +" Eth", votes, souls
         ] ).draw( false ); 
     },
 
@@ -285,7 +285,7 @@ App = {
             let candidate_address = await App.getCandidate(i);
             console.log("loading " + candidate_address);
             let struct = await App.getCandidateStruct(candidate_address);
-            App.fillDataTable(struct[0], struct[1], struct[2])
+            App.fillDataTable(candidate_address, web3.utils.fromWei(struct[0]), struct[1], struct[2])
         }
     }
 }
