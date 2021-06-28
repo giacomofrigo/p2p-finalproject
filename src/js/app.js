@@ -90,8 +90,6 @@ App = {
             let envelopes_opened = voting_condition.envelopes_opened.words[0];
             let envelopes_casted = voting_condition.envelopes_casted.words[0];
             let envelopes_opened_perc = Math.floor(envelopes_opened * 100 / quorum);
-            
-                        
 
             console.log("Casted envelopes: "+ envelopes_casted, ", Opened: "+ envelopes_opened, " Ended? " + voting_condition.ended)
             if (voting_condition.ended){
@@ -117,6 +115,8 @@ App = {
                     $('#result_view').fadeIn()
                     $('#winner_address').text(winner)
                     $('#resultTableDiv').show();
+                    //load dataTable
+                    App.loadDataTable();
                 }
                 
             }else{
@@ -231,39 +231,63 @@ App = {
     },
 
     getCandidateLength: function() {
-        App.contracts["Contract"].deployed().then((instance) =>{
-            instance.getCandidatesCount({from: App.account}).then((receipt) =>  {
-                return receipt;
-            }).catch((error, receipt) => {
-                console.log(error)
-            });
-            
+
+        return new Promise((resolve, reject) => {
+            App.contracts["Contract"].deployed().then((instance) =>{
+                instance.getCandidatesCount({from: App.account}).then((receipt) =>  {
+                    resolve(receipt.words[0]);
+                }).catch((error, receipt) => {
+                    reject(error);
+                });
+                
+            })
         })
     
     },
 
     getCandidate: function(index) {
-        App.contracts["Contract"].deployed().then((instance) =>{
-            instance.getCandidate(index, {from: App.account}).then((receipt) =>  {
-                return receipt;
-            }).catch((error, receipt) => {
-                console.log(error)
-            });
-            
+        return new Promise((resolve, reject) => {
+            App.contracts["Contract"].deployed().then((instance) =>{
+                instance.getCandidate(index, {from: App.account}).then((receipt) =>  {
+                    resolve(receipt);
+                }).catch((error, receipt) => {
+                    reject(error)
+                });
+                
+            })
         })
     
     },
     getCandidateStruct: function(address) {
-        App.contracts["Contract"].deployed().then((instance) =>{
-            instance.getCandidateStruct(address, {from: App.account}).then((receipt) =>  {
-                return receipt;
-            }).catch((error, receipt) => {
-                console.log(error)
-            });
-            
+        return new Promise((resolve, reject) => {
+            App.contracts["Contract"].deployed().then((instance) =>{
+                instance.getCandidateStruct(address, {from: App.account}).then((receipt) =>  {
+                    resolve(receipt);
+                }).catch((error, receipt) => {
+                    reject(error);
+                });
+                
+            })
         })
     
     },
+
+    fillDataTable: function(address, votes, souls){
+        dataTable.row.add( [
+            address, votes, souls
+        ] ).draw( false ); 
+    },
+
+    loadDataTable: async function(){
+        let length = await App.getCandidateLength();
+        console.log("total candidates: "+ length)
+        for (let i = 0; i < length; i ++){
+            let candidate_address = await App.getCandidate(i);
+            console.log("loading " + candidate_address);
+            let struct = await App.getCandidateStruct(candidate_address);
+            App.fillDataTable(struct[0], struct[1], struct[2])
+        }
+    }
 }
 
 // Call init whenever the window loads
