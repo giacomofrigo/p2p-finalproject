@@ -86,17 +86,24 @@ App = {
 
             const v = await instance.escrow(); // Solidity uint are Js BigNumbers 
             let voting_condition = await instance.voting_condition();
-            console.log(voting_condition);
             let quorum = voting_condition.quorum.words[0];
             let envelopes_opened = voting_condition.envelopes_opened.words[0];
             let envelopes_casted = voting_condition.envelopes_casted.words[0];
             let envelopes_opened_perc = Math.floor(envelopes_opened * 100 / quorum);
+            
+                        
 
             console.log("Casted envelopes: "+ envelopes_casted, ", Opened: "+ envelopes_opened, " Ended? " + voting_condition.ended)
             if (voting_condition.ended){
                 let winner = await instance.winner()
 
                 if (winner == '0x0000000000000000000000000000000000000000'){
+                    $('#defaultView').hide()
+                    $('#casted_buttons').hide()
+                    $('#opened_envelopes').hide()
+                    $('#opened_sentence').hide()
+                    $('#mayor_or_sayonara_view').hide()
+                    $('#mayor_or_sayonara_view').hide()
                     $('#tie_view').fadeIn()
                     $('#result_view').hide()
                     
@@ -109,6 +116,7 @@ App = {
                     $('#mayor_or_sayonara_view').hide()
                     $('#result_view').fadeIn()
                     $('#winner_address').text(winner)
+                    $('#resultTableDiv').show();
                 }
                 
             }else{
@@ -220,6 +228,41 @@ App = {
             })
         })
         
+    },
+
+    getCandidateLength: function() {
+        App.contracts["Contract"].deployed().then((instance) =>{
+            instance.getCandidatesCount({from: App.account}).then((receipt) =>  {
+                return receipt;
+            }).catch((error, receipt) => {
+                console.log(error)
+            });
+            
+        })
+    
+    },
+
+    getCandidate: function(index) {
+        App.contracts["Contract"].deployed().then((instance) =>{
+            instance.getCandidate(index, {from: App.account}).then((receipt) =>  {
+                return receipt;
+            }).catch((error, receipt) => {
+                console.log(error)
+            });
+            
+        })
+    
+    },
+    getCandidateStruct: function(address) {
+        App.contracts["Contract"].deployed().then((instance) =>{
+            instance.getCandidateStruct(address, {from: App.account}).then((receipt) =>  {
+                return receipt;
+            }).catch((error, receipt) => {
+                console.log(error)
+            });
+            
+        })
+    
     },
 }
 

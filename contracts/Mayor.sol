@@ -292,5 +292,18 @@ contract Mayor {
         else
             return (false, addr1);
     }
+
+
+    function getCandidatesCount() public view returns(uint) {
+        return candidates.length;
+    }
+
+    function getCandidate(uint _index) public view returns(address payable) {
+        return candidates[_index];
+    }
+
+    function getCandidateStruct(address payable _candidate) public view returns(Candidate memory) {
+        return candidates_struct[_candidate];
+    }
     
 }

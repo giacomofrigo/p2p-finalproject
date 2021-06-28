@@ -9,6 +9,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css"/>
 
     <style>
       html {
@@ -73,6 +74,26 @@
         <p class="lead" style="text-align:center;"> is the new Valadilène mayor!</p>
       </div>
 
+      <div class = "row" id="resultTableDiv" style="display:none;">
+        <div class= "col">
+          <table id="resultTable" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
       <!-- tie view -->
       <div class="jumbotron text-center" id="tie_view" style="display:none;background-color: rgb(255, 173, 173); line-height: 24px; margin-bottom: 0em;">
         <h1 class="display-6" id="winner_address" style="text-align: center; line-height: 86px;">No mayor was elected!</h1>
@@ -118,9 +139,16 @@
     <script src="./dist/truffle-contract.js"></script>
     <!-- App -->
     <script src="./js/app.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
 
 
     <script>
+      let dataTable;
+
+      $(document).ready(() => {
+        dataTable = $('#resultTable').DataTable();
+      })
+
       $("#user_address").on('DOMSubtreeModified', () => {
         let status = getCookie(App.account);
         if (status != "0x0")
@@ -378,7 +406,13 @@
         })
       }
 
-      
+      function getCandiate(index){
+        App.getCandidate(index)
+      }
+
+      function getCandiateStruct(index){
+        App.getCandidateStruct(index)
+      }
 </script>
 </body>
 </html>
