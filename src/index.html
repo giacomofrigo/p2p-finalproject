@@ -74,20 +74,29 @@
         <p class="lead" style="text-align:center;"> is the new Valadilène mayor!</p>
       </div>
 
-      <div class = "row" id="resultTableDiv" style="display:none;">
-        <div class= "col">
-          <table id="resultTable" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Eth Address</th>
-                    <th>Deposit</th>
-                    <th>Votes</th>
-                    <th>Total Souls</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
+
+      <div id="resultTableDiv" style="margin-top:20px;display:none;">
+        <div class = "row justify-content-center" >
+          <div class= "col-lg-9">
+            <h1 class="display-6" id="winner_address" style="text-align:center; line-height: 70px;">Results</h1>
+          </div>
+        </div>
+        
+        <div class = "row justify-content-center" >
+          <div class= "col-lg-9">
+            <table id="resultTable" class="table table-striped" style="width:100%">
+              <thead>
+                  <tr>
+                      <th>Eth Address</th>
+                      <th>Deposit</th>
+                      <th>Votes</th>
+                      <th>Total Souls</th>
+                  </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
         </div>
 
       </div>
@@ -144,7 +153,9 @@
       let dataTable;
 
       $(document).ready(() => {
-        dataTable = $('#resultTable').DataTable();
+        dataTable = $('#resultTable').DataTable({
+          "order": [[ 3, "desc" ]]
+        });
       })
 
       $("#user_address").on('DOMSubtreeModified', () => {

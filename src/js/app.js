@@ -114,9 +114,15 @@ App = {
                     $('#mayor_or_sayonara_view').hide()
                     $('#result_view').fadeIn()
                     $('#winner_address').text(winner)
-                    $('#resultTableDiv').show();
+
+                    try{
+                        App.loadDataTable();
+                        $('#resultTableDiv').show();
+                    }catch{
+                        console.log("error loading candidates")
+                    }
                     //load dataTable
-                    App.loadDataTable();
+                    
                 }
                 
             }else{
@@ -274,7 +280,7 @@ App = {
 
     fillDataTable: function(address, deposit, votes, souls){
         dataTable.row.add( [
-            address, deposit +" Eth", votes, souls
+            address, deposit +" Eth", votes, souls + " Eth"
         ] ).draw( false ); 
     },
 
@@ -285,7 +291,7 @@ App = {
             let candidate_address = await App.getCandidate(i);
             console.log("loading " + candidate_address);
             let struct = await App.getCandidateStruct(candidate_address);
-            App.fillDataTable(candidate_address, web3.utils.fromWei(struct[0]), struct[1], struct[2])
+            App.fillDataTable(candidate_address, web3.utils.fromWei(struct[0]), struct[1],  web3.utils.fromWei(struct[2]))
         }
     }
 }
