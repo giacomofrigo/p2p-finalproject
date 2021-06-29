@@ -271,28 +271,6 @@ contract Mayor {
     function compute_envelope(uint _sigil, address payable _candidate, uint _soul) public pure returns(bytes32) {
         return keccak256(abi.encode(_sigil, _candidate, _soul));
     }
-    
-    function who_have_more_votes(address payable addr1, address payable addr2) private view returns(bool, address payable){
-        uint count_addr1 = 0;
-        uint count_addr2 = 0;
-        uint n_voters = voters.length;
-        
-        for (uint i=0; i<n_voters; i++){
-            if (souls[voters[i]].candidate == addr1)
-                count_addr1 ++;
-            if (souls[voters[i]].candidate == addr2)
-                count_addr2 ++;
-            
-        }
-        
-        if (addr1 > addr2)
-            return (true, addr1);
-        else if (addr2 > addr1)
-            return (true, addr2);
-        else
-            return (false, addr1);
-    }
-
 
     function getCandidatesCount() public view returns(uint) {
         return candidates.length;
