@@ -198,6 +198,12 @@
           showCancelButton: true,
           showLoaderOnConfirm: true,
           preConfirm: () => {
+
+            if (parseInt($('#swal_candidate_deposit').val()) <= 0){
+              Swal.showValidationMessage('Deposit must be > 0')
+              return false;
+            }
+              
             return App.candidate().catch((error) => {
               Swal.fire({
                 title:"Something goes wrong!", 
@@ -293,6 +299,27 @@
           showCancelButton: true,
           showLoaderOnConfirm: true,
           preConfirm: () => {
+
+            if ($('#swal_castenvelope_candidate_address').val() === ""){
+              Swal.showValidationMessage("Candidate address is required");
+              return false;
+            }
+
+            if ($('#swal_castenvelope_souls').val() === "") {
+              Swal.showValidationMessage("Souls is required");
+              return false;
+            }
+
+            if (parseInt($('#swal_castenvelope_souls').val()) <= 0){
+              Swal.showValidationMessage("Souls must be > 0");
+              return false;
+            }
+
+            if ($('#swal_castenvelope_sigil').val() === ""){
+              Swal.showValidationMessage("Sigil is required");
+              return false;
+            }
+
             return App.castEnvelope().catch((error) => {
               Swal.fire({
                 title:"Something goes wrong!", 
@@ -344,6 +371,28 @@
           showCancelButton: true,
           showLoaderOnConfirm: true,
           preConfirm: () => {
+
+            if ($('#swal_openenvelope_candidate').val() === ""){
+              Swal.showValidationMessage("Candidate address is required");
+              return false;
+            }
+
+            if ($('#swal_openenvelope_souls').val() === "") {
+              Swal.showValidationMessage("Souls is required");
+              return false;
+            }
+
+            if (parseInt($('#swal_openenvelope_souls').val()) <= 0){
+              Swal.showValidationMessage("Souls must be > 0");
+              return false;
+            }
+
+            if ($('#swal_openenvelope_sigil').val() === ""){
+              Swal.showValidationMessage("Sigil is required");
+              return false;
+            }
+
+
             return App.openEnvelope().catch((error) => {
               Swal.fire({
                 title:"Something goes wrong!", 
