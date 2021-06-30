@@ -181,28 +181,39 @@ App = {
 
             //call the compute envelope funtion
             App.contracts["Contract"].deployed().then((instance) =>{
-                instance.compute_envelope($('#swal_castenvelope_sigil').val(), $('#swal_castenvelope_candidate_address').val(),  web3.utils.toWei($('#swal_castenvelope_souls').val(), "ether"), {from: App.account}).then((receipt) =>  {
-                    envelope = receipt;
-                    console.log(receipt)
-                    //call the cast envelope function
-                    instance.cast_envelope(envelope, {from: App.account}).then((receipt) =>  {
-                        resolve(receipt)
-                    }).catch((error, receipt) => {
-                        if (error.message.length > 500)
-                            reject(error.message.split("message")[1].split('"')[2]);
-                        reject(error.message);
-                    });
-                })
+                instance.getCandidateStruct($('#swal_castenvelope_candidate_address').val(), {from: App.account}).then((result) => {
+                    
+                    if (result[0] === '0'){
+                        reject("Specified addres is not a valide candidate");
+                    }else{
+                        instance.compute_envelope($('#swal_castenvelope_sigil').val(), $('#swal_castenvelope_candidate_address').val(),  web3.utils.toWei($('#swal_castenvelope_souls').val(), "ether"), {from: App.account}).then((receipt) =>  {
+                            envelope = receipt;
+                            console.log(receipt)
+                            //call the cast envelope function
+                            instance.cast_envelope(envelope, {from: App.account}).then((receipt) =>  {
+                                resolve(receipt)
+                            }).catch((error, receipt) => {
+                                if (error.message.length > 500)
+                                    reject(error.message.split("message")[1].split('"')[2]);
+                                reject(error.message);
+                            });
+                        })
+                    }
 
+                    
                 }).catch((error, receipt) => {
                     if (error.message.length > 500)
                         reject(error.message.split("message")[1].split('"')[2]);
                     reject(error.message);
                 });
-
-                App.contracts["Contract"].deployed().then((instance) =>{
                 
-            })
+
+            }).catch((error, receipt) => {
+                if (error.message.length > 500)
+                    reject(error.message.split("message")[1].split('"')[2]);
+                reject(error.message);
+            });
+
         })
         
     },
