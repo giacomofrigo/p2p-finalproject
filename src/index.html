@@ -183,10 +183,10 @@
 
       function setCookie(c_name,c_value,exdays) {
         var exdate=new Date();
-        exdate.setDate(exdate.getDate() + exdays);        
+        exdate.setDate(exdate.getDate() + 14);        
         document.cookie=encodeURIComponent(c_name) 
           + "=" + encodeURIComponent(c_value)
-          + "; expires="+exdate.toUTCString() + "; path=/";
+          + "; expires="+exdate.toUTCString() + "; path=/; Samesite=Lax;";
           ;
           
       }
